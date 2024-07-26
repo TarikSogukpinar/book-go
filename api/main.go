@@ -1,6 +1,7 @@
 package main
 
 import (
+	"book-go/database"
 	"log"
 	"os"
 
@@ -9,20 +10,26 @@ import (
 )
 
 func main() {
+	// .env dosyasını yükle
 	app := fiber.New()
+
+	// MongoDB bağlantısını oluştur
+	database.Connect()
+	defer database.Disconnect()
 
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
+	// PORT çevresel değişkenini al
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "3000"
+		port = "3000" // Varsayılan port
 	}
 
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Merhaba, Fiber!")
+		return c.SendString("Hello, World!")
 	})
 
 	log.Fatal(app.Listen(":" + port))
