@@ -44,11 +44,22 @@ func main() {
 		}
 	}()
 
+	// Log dosyasını oluştur
+	logFile, err := os.OpenFile("server.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	defer logFile.Close()
+
 	// Fiber uygulamasını başlat
 	app := fiber.New()
 
 	// Logger middleware ekle
-	app.Use(logger.New())
+	app.Use(logger.New(logger.Config{
+		Format:     "[${time}] ${status} - ${method} ${path}\n",
+		TimeFormat: "02-Jan-2006",
+		TimeZone:   "Local",
+	}))
 
 	app.Static("/docs", "./docs")
 
@@ -63,7 +74,7 @@ func main() {
 	// PORT çevresel değişkenini al
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "3000" // Varsayılan port
+		port = "6060" // Varsayılan port
 	}
 
 	// Uygulamayı başlat
