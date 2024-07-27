@@ -10,6 +10,7 @@ import (
 )
 
 var UserCollection *mongo.Collection
+var BookCollection *mongo.Collection
 
 type MongoInstance struct {
 	Client *mongo.Client
@@ -45,6 +46,7 @@ func Connect() error {
 
 	// Koleksiyonu atayalım
 	UserCollection = db.Collection("users")
+	BookCollection = db.Collection("books")
 
 	fmt.Println("Connected to MongoDB!")
 	return nil
