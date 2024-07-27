@@ -18,10 +18,6 @@ type MongoInstance struct {
 
 var Mg MongoInstance
 
-// Database settings (insert your own database name and connection URI)
-// const dbName = "fiber_test"
-// const mongoURI = "mongodb+srv://hanlueee:UPQYabqX3QEFO9Z1@book-go.wz5ztqp.mongodb.net/?retryWrites=true&w=majority&appName=book-go"
-
 func Connect() error {
 
 	config.LoadConfig()
