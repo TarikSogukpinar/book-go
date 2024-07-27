@@ -11,6 +11,7 @@ import (
 	"book-go/routes"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"
 )
@@ -54,6 +55,12 @@ func main() {
 	// Fiber uygulamasını başlat
 	app := fiber.New()
 
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:3000", // İzin verilen kaynaklar
+		AllowHeaders: "Origin, Content-Type, Accept",
+		AllowMethods: "GET, POST, PUT, DELETE",
+	}))
+
 	// Logger middleware ekle
 	app.Use(logger.New(logger.Config{
 		Format:     "[${time}] ${status} - ${method} ${path}\n",
@@ -65,7 +72,7 @@ func main() {
 
 	// Swagger rotasını ekle
 	app.Get("/swagger/*", swagger.New(swagger.Config{
-		URL: "http://localhost:5000/docs/swagger.json", // Swagger dokümanının URL'si
+		URL: "http://localhost:6060/docs/swagger.json", // Swagger dokümanının URL'si
 	}))
 
 	// Rotaları ayarla
