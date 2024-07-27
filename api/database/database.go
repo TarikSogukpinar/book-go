@@ -1,54 +1,55 @@
 package database
 
 import (
+	"book-go/config"
 	"context"
 	"fmt"
-	"log"
-	"os"
 
-	"github.com/joho/godotenv"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var Client *mongo.Client
+var UserCollection *mongo.Collection
 
-func Connect() {
-	// .env dosyasını yükle
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	// URI'yi ortam değişkeninden al
-	uri := os.Getenv("MONGODB_URI")
-	if uri == "" {
-		log.Fatal("MONGODB_URI is not set in the environment")
-	}
-
-	// Set the Stable API version to 1
-	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-	opts := options.Client().ApplyURI(uri).SetServerAPIOptions(serverAPI)
-
-	// Create a new client and connect to the server
-	Client, err = mongo.Connect(context.TODO(), opts)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Send a ping to confirm a successful connection
-	var result bson.M
-	if err := Client.Database("admin").RunCommand(context.TODO(), bson.D{{"ping", 1}}).Decode(&result); err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Pinged your deployment. You successfully connected to MongoDB!")
+type MongoInstance struct {
+	Client *mongo.Client
+	Db     *mongo.Database
 }
 
-func Disconnect() {
-	if err := Client.Disconnect(context.TODO()); err != nil {
-		log.Fatal(err)
+var Mg MongoInstance
+
+// Database settings (insert your own database name and connection URI)
+// const dbName = "fiber_test"
+// const mongoURI = "mongodb+srv://hanlueee:UPQYabqX3QEFO9Z1@book-go.wz5ztqp.mongodb.net/?retryWrites=true&w=majority&appName=book-go"
+
+func Connect() error {
+
+	config.LoadConfig()
+
+	mongoURI := config.Get("MONGODB_URI")
+	dbName := config.Get("DB_NAME")
+
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(mongoURI))
+
+	if err != nil {
+		return err
 	}
-	fmt.Println("Disconnected from MongoDB")
+
+	// Ping the database to verify connection
+	if err := client.Ping(context.TODO(), nil); err != nil {
+		return err
+	}
+
+	db := client.Database(dbName)
+
+	Mg = MongoInstance{
+		Client: client,
+		Db:     db,
+	}
+
+	// Koleksiyonu atayalım
+	UserCollection = db.Collection("users")
+
+	fmt.Println("Connected to MongoDB!")
+	return nil
 }
