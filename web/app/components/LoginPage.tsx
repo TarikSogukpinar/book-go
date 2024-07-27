@@ -1,12 +1,13 @@
+"use client";
 import React, { useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/router";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
 export default function LoginPage({}: Props) {
-  const [username, setEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
@@ -14,20 +15,23 @@ export default function LoginPage({}: Props) {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:6060/api/auth/login', {
-        username,
-        password,
-      });
-      if (response.data.success) {
+      const response = await axios.post(
+        "http://localhost:6060/api/auth/login",
+        {
+          email,
+          password,
+        }
+      );
+      if (response.data.status === "success") {
         // Assuming the JWT token is returned in response.data.token
-        document.cookie = `JWT=${response.data.token}; path=/`;
-        router.push('/dashboard');
+        document.cookie = `JWT=${response.data.token}; path=/; secure; samesite=strict;`;
+        router.push("/");
       } else {
-        setError(response.data.message || 'Login failed');
+        setError(response.data.message || "Login failed");
       }
     } catch (err) {
-      setError('Login failed');
-      console.error('Error logging in:', err);
+      setError("Login failed");
+      console.error("Error logging in:", err);
     }
   };
 
@@ -61,7 +65,7 @@ export default function LoginPage({}: Props) {
                 id="email"
                 name="email"
                 type="email"
-                value={username}
+                value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="block w-full rounded-md border-0 bg-dark/5 py-1.5 text-dark shadow-sm ring-1 ring-inset ring-dark/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
