@@ -13,7 +13,17 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// Register a new user
+// Register godoc
+// @Summary Register a new user
+// @Description Register a new user
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param user body models.User true "User"
+// @Success 201 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /api/auth/register [post]
 func Register(c *fiber.Ctx) error {
 	var user models.User
 	if err := c.BodyParser(&user); err != nil {
@@ -57,7 +67,18 @@ func Register(c *fiber.Ctx) error {
 	})
 }
 
-// Login a user
+// Login godoc
+// @Summary Log in a user
+// @Description Log in a user
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param user body models.User true "User"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /api/auth/login [post]
 func Login(c *fiber.Ctx) error {
 	var credentials models.User
 	if err := c.BodyParser(&credentials); err != nil {
