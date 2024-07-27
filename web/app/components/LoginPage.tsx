@@ -1,8 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import axios from "axios";
-import Image from "next/image";
+import { AiOutlineMail, AiOutlineUser } from "react-icons/ai";
+import { BiLockAlt } from "react-icons/bi";
 import { useRouter } from "next/navigation";
+import { Toaster } from "react-hot-toast";
 
 type Props = {};
 
@@ -37,21 +39,14 @@ export default function LoginPage({}: Props) {
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 pt-20 lg:px-8">
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <Image
-          className="mx-auto w-50 h-50 hover:scale-110 transition duration-300 ease-in-out"
-          src="/assets/gta-svg-black.svg"
-          alt="Your Company"
-          width={240}
-          height={240}
-        />
         <h2 className="mt-10 text-center text-3xl font-bold leading-10 tracking-tight text-dark">
           Login
         </h2>
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        {error && <p className="text-red-500 text-center">{error}</p>}
         <form className="space-y-6" onSubmit={handleLogin}>
           <div>
             <label
@@ -60,7 +55,7 @@ export default function LoginPage({}: Props) {
             >
               Email
             </label>
-            <div className="mt-2">
+            <div className="mt-2 relative">
               <input
                 id="email"
                 name="email"
@@ -68,22 +63,21 @@ export default function LoginPage({}: Props) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="block w-full rounded-md border-0 bg-dark/5 py-1.5 text-dark shadow-sm ring-1 ring-inset ring-dark/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                placeholder="example@gmail.com"
+                className="block w-full rounded-md border-0 bg-dark/5 py-1.5 text-dark shadow-sm ring-1 ring-inset ring-dark/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 pl-10"
+                placeholder="demo@gmail.com"
               />
+              <AiOutlineMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark" />
             </div>
           </div>
 
           <div>
-            <div className="flex items-center justify-between">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium leading-6 text-dark"
-              >
-                Password
-              </label>
-            </div>
-            <div className="mt-2">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium leading-6 text-dark"
+            >
+              Password
+            </label>
+            <div className="mt-2 relative">
               <input
                 id="password"
                 name="password"
@@ -91,9 +85,10 @@ export default function LoginPage({}: Props) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                placeholder="12345#!"
-                className="block w-full rounded-md border-0 bg-dark/5 py-1.5 text-dark shadow-sm ring-1 ring-inset ring-dark/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 bg-dark/5 py-1.5 text-dark shadow-sm ring-1 ring-inset ring-dark/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 pl-10"
+                placeholder="1234567"
               />
+              <BiLockAlt className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark" />
             </div>
           </div>
 

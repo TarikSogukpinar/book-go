@@ -4,7 +4,6 @@ import axios from "axios";
 import { AiOutlineMail, AiOutlineUser } from "react-icons/ai";
 import { BiLockAlt } from "react-icons/bi";
 import { Toaster, toast } from "react-hot-toast";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 type Props = {};
