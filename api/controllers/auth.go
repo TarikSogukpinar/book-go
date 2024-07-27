@@ -41,6 +41,16 @@ func Register(c *fiber.Ctx) error {
 		})
 	}
 
+	// Check if email already exists
+	var existingUser models.User
+	err := database.UserCollection.FindOne(context.TODO(), bson.M{"email": user.Email}).Decode(&existingUser)
+	if err == nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Email already in use",
+		})
+	}
+
 	// Hash password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
 	if err != nil {
@@ -73,14 +83,17 @@ func Register(c *fiber.Ctx) error {
 // @Tags auth
 // @Accept json
 // @Produce json
-// @Param user body models.User true "User"
+// @Param user body models.LoginRequest true "LoginRequest"
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} map[string]interface{}
 // @Failure 401 {object} map[string]interface{}
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/auth/login [post]
 func Login(c *fiber.Ctx) error {
-	var credentials models.User
+	var credentials struct {
+		Email    string `json:"email" validate:"required,email"`
+		Password string `json:"password" validate:"required,min=6"`
+	}
 	if err := c.BodyParser(&credentials); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"status":  "error",
@@ -88,7 +101,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	// Doğrulama
+	// Validation Incoming Data
 	if err := validators.ValidateStruct(credentials); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"status":  "error",
@@ -97,7 +110,7 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	var user models.User
-	err := database.UserCollection.FindOne(context.TODO(), bson.M{"username": credentials.Username}).Decode(&user)
+	err := database.UserCollection.FindOne(context.TODO(), bson.M{"email": credentials.Email}).Decode(&user)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"status":  "error",

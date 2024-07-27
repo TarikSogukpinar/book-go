@@ -1,9 +1,8 @@
-import React from 'react'
+import React from "react";
+import RegisterPage from "../components/RegisterPage";
 
-type Props = {}
+type Props = {};
 
 export default function Register({}: Props) {
-  return (
-    <div>Register</div>
-  )
+  return <RegisterPage />;
 }

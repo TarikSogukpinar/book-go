@@ -1,9 +1,8 @@
-import React from 'react'
+import React from "react";
+import DocsPage from "../components/DocsPage";
 
-type Props = {}
+type Props = {};
 
 export default function Docs({}: Props) {
-  return (
-    <div>Docs</div>
-  )
+  return <DocsPage />;
 }
