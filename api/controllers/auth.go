@@ -4,21 +4,30 @@ import (
 	"book-go/database"
 	"book-go/models"
 	"book-go/utils"
+	"book-go/validators"
 	"context"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 )
 
+// Register a new user
 func Register(c *fiber.Ctx) error {
 	var user models.User
 	if err := c.BodyParser(&user); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"status":  "error",
-			"message": "Invalid payload",
+			"message": "Invalid request payload",
+		})
+	}
+
+	// Validation
+	if err := validators.ValidateStruct(user); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "error",
+			"message": err.Error(),
 		})
 	}
 
@@ -31,9 +40,9 @@ func Register(c *fiber.Ctx) error {
 		})
 	}
 	user.Password = string(hashedPassword)
-	user.ID = primitive.NewObjectID()
 
 	// Insert user into database
+	user.ID = primitive.NewObjectID()
 	_, err = database.UserCollection.InsertOne(context.Background(), user)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -48,12 +57,21 @@ func Register(c *fiber.Ctx) error {
 	})
 }
 
+// Login a user
 func Login(c *fiber.Ctx) error {
 	var credentials models.User
 	if err := c.BodyParser(&credentials); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"status":  "error",
 			"message": "Invalid payload",
+		})
+	}
+
+	// Doğrulama
+	if err := validators.ValidateStruct(credentials); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "error",
+			"message": err.Error(),
 		})
 	}
 
@@ -86,46 +104,5 @@ func Login(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"status": "success",
 		"token":  token,
-	})
-}
-
-func AuthRequired() fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		authHeader := c.Get("Authorization")
-		if authHeader == "" {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"status":  "error",
-				"message": "missing authorization header",
-			})
-		}
-
-		tokenString := authHeader[len("Bearer "):]
-
-		token, err := utils.ParseJWT(tokenString)
-		if err != nil {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"status":  "error",
-				"message": "invalid token",
-			})
-		}
-
-		claims, ok := token.Claims.(jwt.MapClaims)
-		if !ok || !token.Valid {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"status":  "error",
-				"message": "invalid token",
-			})
-		}
-
-		c.Locals("username", claims["username"])
-
-		return c.Next()
-	}
-}
-
-func Protected(c *fiber.Ctx) error {
-	username := c.Locals("username")
-	return c.JSON(fiber.Map{
-		"message": "Welcome " + username.(string),
 	})
 }

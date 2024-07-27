@@ -2,6 +2,7 @@ package routes
 
 import (
 	"book-go/controllers"
+	"book-go/middlewares"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -18,14 +19,13 @@ func SetupRoutes(app *fiber.App) {
 	auth.Post("/register", controllers.Register)
 	auth.Post("/login", controllers.Login)
 
-	// Protected routes
+	// Protected routes (requires authentication)
 	protected := api.Group("/protected")
-	protected.Use(controllers.AuthRequired())
-	protected.Get("/", controllers.Protected)
+	protected.Use(middlewares.AuthRequired())
 
-	// Book routes
+	// Book routes (requires authentication)
 	books := api.Group("/books")
-	books.Use(controllers.AuthRequired())
+	books.Use(middlewares.AuthRequired()) // Applying Auth middleware to book routes
 	books.Get("/", controllers.GetBooks)
 	books.Post("/", controllers.CreateBook)
 	books.Get("/:id", controllers.GetBook)

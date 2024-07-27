@@ -15,12 +15,10 @@ import (
 )
 
 func main() {
-	// .env dosyasını yükle
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	// MongoDB bağlantısını oluştur
 	if err := database.Connect(); err != nil {
 		fmt.Println("Could not connect to MongoDB")
 		log.Fatal(err)
@@ -31,21 +29,16 @@ func main() {
 		}
 	}()
 
-	// Fiber uygulamasını başlat
 	app := fiber.New()
 
-	// Logger middleware ekle
 	app.Use(logger.New())
 
-	// Rotaları ayarla
 	routes.SetupRoutes(app)
 
-	// PORT çevresel değişkenini al
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "5000" // Varsayılan port
+		port = "5000"
 	}
 
-	// Uygulamayı başlat
 	log.Fatal(app.Listen(":" + port))
 }

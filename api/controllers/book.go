@@ -3,6 +3,7 @@ package controllers
 import (
 	"book-go/database"
 	"book-go/models"
+	"book-go/validators"
 	"context"
 	"time"
 
@@ -71,6 +72,14 @@ func CreateBook(c *fiber.Ctx) error {
 		})
 	}
 
+	// Validation
+	if err := validators.ValidateStruct(book); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "error",
+			"message": err.Error(),
+		})
+	}
+
 	book.ID = primitive.NewObjectID()
 	book.CreatedAt = time.Now()
 	book.UpdatedAt = time.Now()
@@ -102,6 +111,14 @@ func UpdateBook(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"status":  "error",
 			"message": "Invalid request payload",
+		})
+	}
+
+	// Doğrulama
+	if err := validators.ValidateStruct(book); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "error",
+			"message": err.Error(),
 		})
 	}
 
