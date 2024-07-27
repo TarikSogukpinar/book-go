@@ -6,12 +6,15 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/joho/godotenv"
 )
 
 func main() {
 	// .env dosyasını yükle
 	app := fiber.New()
+
+	app.Use(logger.New())
 
 	// MongoDB bağlantısını oluştur
 	database.Connect()
