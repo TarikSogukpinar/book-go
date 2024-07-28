@@ -18,7 +18,7 @@ export default function LoginPage({}: Props) {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:6060/api/auth/login",
+        `https://book.tariksogukpinar.dev/api/auth/login`,
         {
           email,
           password,

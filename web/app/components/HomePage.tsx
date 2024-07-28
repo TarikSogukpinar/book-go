@@ -27,7 +27,7 @@ export default function HomePage({}: Props) {
 
     if (token) {
       try {
-        const response = await axios.get("http://localhost:6060/api/books", {
+        const response = await axios.get(`https://book.tariksogukpinar.dev/api/books`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

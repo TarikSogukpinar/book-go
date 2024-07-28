@@ -20,7 +20,7 @@ export default function DeleteBookModal({
     const token = Cookies.get("JWT");
     try {
       const response = await axios.delete(
-        `http://localhost:6060/api/books/${bookId}`,
+        `https://book.tariksogukpinar.dev/api/books/${bookId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -28,7 +28,7 @@ export default function DeleteBookModal({
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 204) {
         toast.success("Kitap başarıyla silindi!");
         onClose();
       } else {

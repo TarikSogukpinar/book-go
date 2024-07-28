@@ -19,7 +19,7 @@ export default function RegisterPage({}: Props) {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:6060/api/auth/register",
+        `https://book.tariksogukpinar.dev/api/auth/register`,
         {
           email,
           username,

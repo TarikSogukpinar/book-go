@@ -12,6 +12,7 @@ const UpdateBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [bookDetails, setBookDetails] = useState<{
     title: string;
     author: string;
+    description: string;
   } | null>(null);
   const [error, setError] = useState<string>("");
 
@@ -24,7 +25,7 @@ const UpdateBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
     if (token) {
       try {
         const response = await axios.get(
-          `http://localhost:6060/api/books/${bookId}`,
+          `https://book.tariksogukpinar.dev/api/books/${bookId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -54,8 +55,12 @@ const UpdateBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
     if (token && bookDetails) {
       try {
         const response = await axios.put(
-          `http://localhost:6060/api/books/${bookId}`,
-          { title: bookDetails.title, author: bookDetails.author },
+          `https://book.tariksogukpinar.dev/api/books/${bookId}`,
+          {
+            title: bookDetails.title,
+            author: bookDetails.author,
+            description: bookDetails.description,
+          },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -127,6 +132,19 @@ const UpdateBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
               onChange={(e) =>
                 setBookDetails((prev) =>
                   prev ? { ...prev, author: e.target.value } : prev
+                )
+              }
+              className="p-2 border rounded-md mt-2"
+            />
+            <label htmlFor="description" className="mt-2">
+              Açıklama:
+            </label>
+            <textarea
+              id="description"
+              value={bookDetails.description}
+              onChange={(e) =>
+                setBookDetails((prev) =>
+                  prev ? { ...prev, description: e.target.value } : prev
                 )
               }
               className="p-2 border rounded-md mt-2"

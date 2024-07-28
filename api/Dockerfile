@@ -1,28 +1,35 @@
-# Stage 1: Build the Go Fiber application
+# Builder aşaması
 FROM golang:1.22.5 AS builder
 
+# Çalışma dizinimizi oluşturuyoruz
 WORKDIR /app
 
-# Go mod files first to cache dependencies
+# Go mod ve sum dosyalarını çalışma dizinimize kopyalıyoruz
 COPY go.mod go.sum ./
+
+# Modülleri indiriyoruz
 RUN go mod download
 
-# Copy the entire application
+# Uygulama dosyalarını kopyalıyoruz
 COPY . .
 
-# Build the application
-RUN go build -o main .
+# .env dosyasını kopyalıyoruz
+COPY .env .env
 
-# Stage 2: Create the final image
+# Uygulamayı build ediyoruz
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+
+# Son aşamada çalıştırmak için ufak bir image kullanıyoruz
 FROM alpine:latest
 
 WORKDIR /root/
 
-# Copy the binary from the builder stage
+# Builder aşamasında üretilen binary dosyamızı kopyalıyoruz
 COPY --from=builder /app/main .
+COPY --from=builder /app/.env .
 
-# Expose the application's port
-EXPOSE 5000
+# Binary dosyamızı çalıştırılabilir hale getiriyoruz
+RUN chmod +x ./main
 
-# Command to run the application
+# Uygulamamızı başlatıyoruz
 CMD ["./main"]

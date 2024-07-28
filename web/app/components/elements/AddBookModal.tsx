@@ -20,7 +20,7 @@ export default function BookModal({ isOpen, onClose }: BookModalProps) {
     console.log(token, "add book token");
     try {
       const response = await axios.post(
-        "http://localhost:6060/api/books",
+        "https://book.tariksogukpinar.dev/api/books",
         {
           title,
           author,
