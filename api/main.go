@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"time"
 
 	"book-go/config"
 	"book-go/database"
@@ -13,6 +14,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/helmet"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/swagger"
 )
@@ -55,6 +58,13 @@ func main() {
 
 	// Fiber uygulamasını başlat
 	app := fiber.New()
+
+	app.Use(limiter.New(limiter.Config{
+		Max:        10,
+		Expiration: 30 * time.Second,
+	}))
+
+	app.Use(helmet.New())
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "https://book.tariksogukpinar.dev, http://localhost:3000, http://localhost:6060, http://localhost:7070",
