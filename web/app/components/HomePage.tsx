@@ -27,9 +27,11 @@ export default function HomePage({}: Props) {
 
   useEffect(() => {
     const token = Cookies.get("JWT");
+    const email = Cookies.get("userEmail") || null;
 
     if (token) {
       setIsLoggedIn(true);
+      setUserEmail(email);
     } else {
       setIsLoggedIn(false);
       setError("Please log in.");
@@ -39,6 +41,7 @@ export default function HomePage({}: Props) {
 
   const handleLogout = () => {
     Cookies.remove("JWT");
+    Cookies.remove("userEmail");
     setIsLoggedIn(false);
     router.push("/login");
   };
@@ -108,43 +111,32 @@ export default function HomePage({}: Props) {
   return (
     <div className="min-h-screen bg-gray-100">
       <Toaster position="top-right" reverseOrder={false} />
-      <header className="bg-white shadow flex justify-center items-center px-4 sm:px-6 lg:px-8 py-16">
-        <div className="flex flex-col items-center">
-          <div className="flex space-x-6 mb-4">
-            <a
-              href="https://github.com/your-github-repo"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <FaGithub size="2em" />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/your-linkedin-profile"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <FaLinkedin size="2em" />
-            </a>
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 text-center mt-4">
+      <header className="bg-white shadow flex flex-col md:flex-row justify-between items-center px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex flex-col items-center md:items-start">
+          <h1 className="text-4xl font-bold text-gray-900 text-center md:text-left mt-4 md:mt-0">
             Golang & Next.js Book Application
           </h1>
         </div>
         {isLoggedIn && (
-          <button
-            onClick={handleLogout}
-            className=" flex justify-end text-black  rounded-md hover:text-gray-600"
-          >
-            Logout
-          </button>
+          <div className="flex flex-col items-center md:items-end mt-14 md:mt-0">
+            <button
+              onClick={handleLogout}
+              className="text-black rounded-md hover:text-gray-600"
+            >
+              Logout
+            </button>
+            {userEmail && (
+              <span className="flex text-xs text-gray-500 mt-1 opacity-75 mb-5 md:mb-0">
+                ( {userEmail} )
+              </span>
+            )}
+          </div>
         )}
       </header>
       <main>
         {isLoggedIn ? (
           <div className="mt-10">
-            <div className="flex items-center justify-between mt-10 space-x-4">
+            <div className="flex flex-col md:flex-row items-center justify-center md:justify-between mt-10 space-y-4 md:space-y-0 md:space-x-4">
               <button
                 className="bg-gray-950 text-white px-4 py-2 rounded-md hover:bg-gray-600"
                 onClick={openAddModal}
@@ -158,7 +150,7 @@ export default function HomePage({}: Props) {
                   fetchBooks();
                 }}
               >
-                List All Books
+                List Books
               </button>
               <button
                 className="bg-gray-950 text-white px-4 py-2 rounded-md hover:bg-gray-600"
@@ -209,6 +201,26 @@ export default function HomePage({}: Props) {
           <p className="text-red-500 text-center mt-10">{error}</p>
         )}
       </main>
+      <footer className="flex flex-col items-center mt-10">
+        <div className="flex space-x-6 mb-4">
+          <a
+            href="https://github.com/TarikSogukpinar/book-go"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <FaGithub size="2em" />
+          </a>
+          <a
+            href="https://www.linkedin.com/in/tarik-sogukpinar/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <FaLinkedin size="2em" />
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }

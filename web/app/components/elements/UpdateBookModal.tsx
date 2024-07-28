@@ -138,7 +138,7 @@ const UpdateBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
               htmlFor="author"
               className="block text-sm font-medium text-gray-700"
             >
-              Writer:
+              Author:
             </label>
             <input
               type="text"
@@ -169,7 +169,7 @@ const UpdateBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
             />
             <button
               type="submit"
-              className="bg-gray-950 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+              className="bg-gray-950 text-white px-4 py-2 font-bold rounded-md hover:bg-gray-600"
             >
               Update Book
             </button>

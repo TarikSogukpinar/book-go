@@ -27,6 +27,7 @@ export default function LoginPage({}: Props) {
 
       if (response.data.status === "success") {
         document.cookie = `JWT=${response.data.token}; path=/; secure; samesite=strict;`;
+        document.cookie = `userEmail=${email}; path=/; secure; samesite=strict;`;
         router.push("/");
       } else {
         setError(response.data.message || "Login failed");

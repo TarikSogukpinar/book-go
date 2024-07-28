@@ -10,7 +10,7 @@ import (
 func SetupRoutes(app *fiber.App) {
 	// Root route
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
+		return c.SendString("GoLang & Next.js!")
 	})
 
 	// Auth routes
@@ -31,4 +31,7 @@ func SetupRoutes(app *fiber.App) {
 	books.Get("/:id", controllers.GetBook)
 	books.Put("/:id", controllers.UpdateBook)
 	books.Delete("/:id", controllers.DeleteBook)
+
+	// Search route
+	books.Get("/search", controllers.SearchBooks)
 }

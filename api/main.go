@@ -8,7 +8,7 @@ import (
 
 	"book-go/config"
 	"book-go/database"
-	_ "book-go/docs" // Swagger dosyalarını import edin
+	_ "book-go/docs"
 	"book-go/middlewares"
 	"book-go/routes"
 
@@ -36,10 +36,9 @@ import (
 // @BasePath /
 
 func main() {
-	// .env dosyasını yükle
+
 	config.LoadConfig()
 
-	// MongoDB bağlantısını oluştur
 	if err := database.Connect(); err != nil {
 		log.Fatal(err)
 	}
@@ -49,14 +48,12 @@ func main() {
 		}
 	}()
 
-	// Log dosyasını oluştur
 	logFile, err := os.OpenFile("server.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)
 	}
 	defer logFile.Close()
 
-	// Fiber uygulamasını başlat
 	app := fiber.New()
 
 	app.Use(limiter.New(limiter.Config{
@@ -72,7 +69,7 @@ func main() {
 		AllowMethods:     "GET, POST, PUT, DELETE",
 		AllowCredentials: true,
 	}))
-	// Logger middleware ekle
+
 	app.Use(logger.New(logger.Config{
 		Format:     "[${time}] ${status} - ${method} ${path}\n",
 		TimeFormat: "02-Jan-2006",
@@ -83,20 +80,16 @@ func main() {
 
 	app.Static("/docs", "./docs")
 
-	// Swagger rotasını ekle
 	app.Get("/swagger/*", swagger.New(swagger.Config{
-		URL: "http://localhost:6060/docs/swagger.json", // Swagger dokümanının URL'si
+		URL: "http://localhost:6060/docs/swagger.json", // Swagger URL
 	}))
 
-	// Rotaları ayarla
 	routes.SetupRoutes(app)
 
-	// PORT çevresel değişkenini al
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "6060" // Varsayılan port
+		port = "6060" // Default port
 	}
 
-	// Uygulamayı başlat
 	log.Fatal(app.Listen(":" + port))
 }

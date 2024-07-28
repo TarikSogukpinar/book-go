@@ -5,6 +5,7 @@ import (
 	"book-go/models"
 	"book-go/validators"
 	"context"
+	"log"
 	"strconv"
 	"time"
 
@@ -244,4 +245,54 @@ func DeleteBook(c *fiber.Ctx) error {
 	}
 
 	return c.SendStatus(fiber.StatusNoContent)
+}
+
+// SearchBooks godoc
+// @Summary Search books
+// @Description Search books by title
+// @Tags books
+// @Produce json
+// @Param q query string true "Search query"
+// @Success 200 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /api/books/search [get]
+func SearchBooks(c *fiber.Ctx) error {
+	query := c.Query("q")
+	if query == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Query parameter is required",
+		})
+	}
+
+	log.Printf("Search query: %s", query)
+
+	filter := bson.M{
+		"$or": []bson.M{
+			{"title": bson.M{"$regex": query, "$options": "i"}},
+			{"author": bson.M{"$regex": query, "$options": "i"}},
+		},
+	}
+
+	var books []models.Book
+	collection := database.BookCollection
+	cursor, err := collection.Find(context.Background(), filter)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Failed to search books",
+		})
+	}
+	defer cursor.Close(context.Background())
+
+	if err := cursor.All(context.Background(), &books); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Failed to parse books",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"books": books,
+	})
 }

@@ -44,7 +44,6 @@ func Connect() error {
 		Db:     db,
 	}
 
-	// Koleksiyonu atayalım
 	UserCollection = db.Collection("users")
 	BookCollection = db.Collection("books")
 

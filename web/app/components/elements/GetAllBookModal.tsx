@@ -20,49 +20,85 @@ const GetAllBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalBooks, setTotalBooks] = useState<number>(0);
   const [booksPerPage] = useState<number>(5); // Change this value to change the number of books per page
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      setError("");
-      setLoading(true);
-      const token = Cookies.get("JWT");
+  const fetchBooks = async () => {
+    setError("");
+    setLoading(true);
+    const token = Cookies.get("JWT");
 
-      if (token) {
-        try {
-          const response = await axios.get(
-            `https://book.tariksogukpinar.dev/api/books`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-              params: {
-                page: currentPage,
-                limit: booksPerPage,
-              },
-            }
-          );
-
-          if (
-            response.data &&
-            response.data.books &&
-            response.data.total !== undefined
-          ) {
-            setBooks(response.data.books);
-            setTotalBooks(response.data.total);
-          } else {
-            throw new Error("Invalid response structure");
+    if (token) {
+      try {
+        const response = await axios.get(
+          `https://book.tariksogukpinar.dev/api/books`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              page: currentPage,
+              limit: booksPerPage,
+            },
           }
-        } catch (err) {
-          setError("Failed to fetch books or an error occurred");
-        } finally {
-          setLoading(false);
+        );
+
+        if (
+          response.data &&
+          response.data.books &&
+          response.data.total !== undefined
+        ) {
+          setBooks(response.data.books);
+          setTotalBooks(response.data.total);
+        } else {
+          throw new Error("Invalid response structure");
         }
-      } else {
-        setError("Token not found. Please login.");
+      } catch (err) {
+        setError("Failed to fetch books or an error occurred");
+      } finally {
         setLoading(false);
       }
-    };
+    } else {
+      setError("Token not found. Please login.");
+      setLoading(false);
+    }
+  };
 
+  const searchBooks = async () => {
+    setError("");
+    setLoading(true);
+    const token = Cookies.get("JWT");
+
+    if (token) {
+      try {
+        const response = await axios.get(
+          `https://book.tariksogukpinar.dev/api/books/search`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              q: searchQuery,
+            },
+          }
+        );
+
+        if (response.data && response.data.books !== undefined) {
+          setBooks(response.data.books);
+        } else {
+          throw new Error("Invalid response structure");
+        }
+      } catch (err) {
+        setError("Failed to search books or an error occurred");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setError("Token not found. Please login.");
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     if (isOpen) {
       fetchBooks();
     }
@@ -80,13 +116,26 @@ const GetAllBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
         ) : (
           <>
             <h2 className="text-2xl font-bold mb-4">All Books</h2>
+            <input
+              type="text"
+              placeholder="Search by title..."
+              className="p-2 border rounded-md w-full mb-4"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 mb-4"
+              onClick={searchBooks}
+            >
+              Search
+            </button>
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <p className="mb-4">Total Books: {totalBooks}</p>
             {books && books.length > 0 ? (
               <ul className="space-y-2">
                 {books.map((book) => (
                   <li key={book.id} className="border-b border-gray-300 py-2">
-                    <p className="font-semibold">ID: {book.id}</p>
+                    <p className="font-semibold">Book ID: {book.id}</p>
                     <p className="font-semibold">Title: {book.title}</p>
                     <p className="font-semibold">Author: {book.author}</p>
                   </li>
