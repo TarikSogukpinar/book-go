@@ -34,7 +34,7 @@ export default function BookModal({ isOpen, onClose }: BookModalProps) {
       );
 
       if (response.status === 201) {
-        toast.success("Book added success!");
+        toast.success("Book added successfully!");
         onClose();
       } else {
         setError("Book not added!");
@@ -49,6 +49,7 @@ export default function BookModal({ isOpen, onClose }: BookModalProps) {
 
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
@@ -64,7 +65,7 @@ export default function BookModal({ isOpen, onClose }: BookModalProps) {
         <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="sm:flex sm:items-start">
-              <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+              <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                 <h3
                   className="text-lg leading-6 font-medium text-gray-900"
                   id="modal-title"
@@ -73,7 +74,7 @@ export default function BookModal({ isOpen, onClose }: BookModalProps) {
                 </h3>
                 <div className="mt-2">
                   {error && <p className="text-red-500">{error}</p>}
-                  <form onSubmit={handleAddBook}>
+                  <form onSubmit={handleAddBook} className="space-y-4">
                     <div>
                       <label
                         htmlFor="title"
@@ -89,11 +90,11 @@ export default function BookModal({ isOpen, onClose }: BookModalProps) {
                           value={title}
                           onChange={(e) => setTitle(e.target.value)}
                           required
-                          className="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         />
                       </div>
                     </div>
-                    <div className="mt-4">
+                    <div>
                       <label
                         htmlFor="author"
                         className="block text-sm font-medium text-gray-700"
@@ -108,11 +109,11 @@ export default function BookModal({ isOpen, onClose }: BookModalProps) {
                           value={author}
                           onChange={(e) => setAuthor(e.target.value)}
                           required
-                          className="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         />
                       </div>
                     </div>
-                    <div className="mt-4">
+                    <div>
                       <label
                         htmlFor="description"
                         className="block text-sm font-medium text-gray-700"
@@ -126,14 +127,14 @@ export default function BookModal({ isOpen, onClose }: BookModalProps) {
                           value={description}
                           onChange={(e) => setDescription(e.target.value)}
                           required
-                          className="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         ></textarea>
                       </div>
                     </div>
                     <div className="mt-5 sm:mt-6">
                       <button
                         type="submit"
-                        className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm"
+                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm"
                       >
                         Add Book
                       </button>

@@ -7,8 +7,9 @@ import { Toaster } from "react-hot-toast";
 import BookModal from "./elements/AddBookModal";
 import GetAllBookModal from "./elements/GetAllBookModal";
 import UpdateBookModal from "./elements/UpdateBookModal";
-import axios from "axios";
 import DeleteBookModal from "./elements/DeleteBookModal";
+import { FaLinkedin, FaGithub } from "react-icons/fa";
+import axios from "axios";
 
 type Props = {};
 
@@ -22,25 +23,6 @@ export default function HomePage({}: Props) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const router = useRouter();
 
-  const fetchBooks = async () => {
-    const token = Cookies.get("JWT");
-
-    if (token) {
-      try {
-        const response = await axios.get(`https://book.tariksogukpinar.dev/api/books`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setBooks(response.data.books);
-      } catch (err) {
-        setError("Kitaplar getirilemedi.");
-      }
-    } else {
-      setError("Token bulunamadı. Lütfen giriş yapın.");
-    }
-  };
-
   useEffect(() => {
     const token = Cookies.get("JWT");
 
@@ -48,7 +30,7 @@ export default function HomePage({}: Props) {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
-      setError("Lütfen giriş yapın.");
+      setError("Please log in.");
     }
   }, []);
 
@@ -68,7 +50,6 @@ export default function HomePage({}: Props) {
 
   const openGetModal = () => {
     setIsGetModalOpen(true);
-    fetchBooks(); // Kitapları butona tıklayınca getir
   };
 
   const closeGetModal = () => {
@@ -91,103 +72,132 @@ export default function HomePage({}: Props) {
     setIsDeleteModalOpen(false);
   };
 
+  const fetchBooks = async () => {
+    const token = Cookies.get("JWT");
+
+    if (token) {
+      try {
+        const response = await axios.get(
+          `https://book.tariksogukpinar.dev/api/books`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setBooks(response.data.books);
+      } catch (err) {
+        setError("Books could not be fetched.");
+      }
+    } else {
+      setError("Token not found. Please log in.");
+    }
+  };
+
   return (
-    <div>
+    <div className="min-h-screen bg-gray-100">
       <Toaster position="top-right" reverseOrder={false} />
-      <div className="flex justify-between items-center p-4 bg-gray-100">
-        <h1 className="text-3xl font-bold">
-          Go Lang Fiber & Next.js TypeScript Kitap Uygulaması
-        </h1>
+      <header className="bg-white shadow flex justify-between items-center px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex flex-col items-center">
+          <div className="flex space-x-6 mb-4">
+            <a
+              href="https://github.com/your-github-repo"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <FaGithub size="2em" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/your-linkedin-profile"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <FaLinkedin size="2em" />
+            </a>
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 text-center mt-4">
+            GoLang & Next.js TypeScript Book Application
+          </h1>
+        </div>
         {isLoggedIn && (
           <button
             onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded-md ml-3"
+            className=" text-black px-4 py-2 rounded-md hover:text-gray-600"
           >
-            Çıkış Yap
+            Logout
           </button>
         )}
-      </div>
-      {isLoggedIn ? (
-        <div className="mt-10">
-          {books.length > 0 && (
-            <div className="flex justify-center">
-              <ul className="w-1/2">
-                {books.map((book) => (
-                  <li key={book.id} className="border-b border-gray-300 py-2">
-                    {book.title}
-                  </li>
-                ))}
-              </ul>
+      </header>
+      <main>
+        {isLoggedIn ? (
+          <div className="mt-10">
+            <div className="flex justify-center mt-10 space-x-4">
+              <button
+                className="bg-gray-950 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+                onClick={openAddModal}
+              >
+                Add Book
+              </button>
+              <button
+                className="bg-gray-950 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+                onClick={() => {
+                  openGetModal();
+                  fetchBooks();
+                }}
+              >
+                List All Books
+              </button>
+              <button
+                className="bg-gray-950 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+                onClick={openUpdateModal}
+              >
+                Update Book
+              </button>
+              <button
+                className="bg-gray-950 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+                onClick={openDeleteModal}
+              >
+                Delete Book
+              </button>
             </div>
-          )}
-          <div className="flex justify-center mt-10 space-x-4">
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
-              onClick={openAddModal}
-            >
-              Kitap Ekle
-            </button>
-            <button
-              className="bg-green-500 text-white px-4 py-2 rounded-md"
-              onClick={openGetModal}
-            >
-              Kitap Getir
-            </button>
-            <button
-              className="bg-yellow-500 text-white px-4 py-2 rounded-md"
-              onClick={openUpdateModal}
-            >
-              Kitap Güncelle
-            </button>
-            <button
-              className="bg-red-500 text-white px-4 py-2 rounded-md"
-              onClick={openDeleteModal}
-            >
-              Kitap Sil
-            </button>
+            <BookModal isOpen={isAddModalOpen} onClose={closeAddModal} />
+            <GetAllBookModal isOpen={isGetModalOpen} onClose={closeGetModal} />
+            <UpdateBookModal
+              isOpen={isUpdateModalOpen}
+              onClose={closeUpdateModal}
+            />
+            <DeleteBookModal
+              isOpen={isDeleteModalOpen}
+              onClose={closeDeleteModal}
+            />
           </div>
-          <BookModal isOpen={isAddModalOpen} onClose={closeAddModal} />
-          <GetAllBookModal isOpen={isGetModalOpen} onClose={closeGetModal} />
-          <UpdateBookModal
-            isOpen={isUpdateModalOpen}
-            onClose={closeUpdateModal}
-          />
-          <DeleteBookModal
-            isOpen={isDeleteModalOpen}
-            onClose={closeDeleteModal}
-          />
-        </div>
-      ) : (
-        <ul className="flex flex-col items-center space-y-4 mt-10">
-          <li>
-            <Link
-              href="/login"
-              className="text-blue-500 hover:underline text-xl"
-            >
-              Giriş Yap
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/register"
-              className="text-blue-500 hover:underline text-xl"
-            >
-              Kayıt Ol
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/docs"
-              className="text-blue-500 hover:underline text-xl"
-            >
-              Belgeler
-            </Link>
-          </li>
-        </ul>
-      )}
-      {error && !isLoggedIn && (
-        <p className="text-red-500 text-center mt-10">{error}</p>
-      )}
+        ) : (
+          <div className="flex flex-col items-center space-y-4 mt-10">
+            <div className="flex space-x-4">
+              <Link href="/login">
+                <button className="bg-gray-950 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                  Login
+                </button>
+              </Link>
+              <Link href="/register">
+                <button className="bg-gray-950 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                  Register
+                </button>
+              </Link>
+              <Link href="/docs">
+                <button className="bg-gray-950 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                  Docs
+                </button>
+              </Link>
+            </div>
+          </div>
+        )}
+        {error && !isLoggedIn && (
+          <p className="text-red-500 text-center mt-10">{error}</p>
+        )}
+      </main>
     </div>
   );
 }
