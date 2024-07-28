@@ -5,25 +5,50 @@ import (
 	"book-go/models"
 	"book-go/validators"
 	"context"
+	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // GetBooks godoc
 // @Summary Get all books
-// @Description Retrieve all books
+// @Description Retrieve all books with pagination
 // @Tags books
 // @Produce json
-// @Success 200 {array} models.Book
+// @Param page query int false "Page number"
+// @Param limit query int false "Number of books per page"
+// @Success 200 {object} map[string]interface{}
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/books [get]
 func GetBooks(c *fiber.Ctx) error {
-	books := []models.Book{}
+	page, err := strconv.Atoi(c.Query("page", "1"))
+	if err != nil || page < 1 {
+		return c.Status(fiber.StatusBadRequest).JSON(map[string]interface{}{
+			"status":  "error",
+			"message": "Invalid page number",
+		})
+	}
 
-	cursor, err := database.BookCollection.Find(context.Background(), bson.D{})
+	limit, err := strconv.Atoi(c.Query("limit", "10"))
+	if err != nil || limit < 1 {
+		return c.Status(fiber.StatusBadRequest).JSON(map[string]interface{}{
+			"status":  "error",
+			"message": "Invalid limit number",
+		})
+	}
+
+	skip := int64((page - 1) * limit)
+	limit64 := int64(limit)
+
+	// Find all books with pagination
+	cursor, err := database.BookCollection.Find(context.Background(), bson.D{}, &options.FindOptions{
+		Skip:  &skip,
+		Limit: &limit64,
+	})
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(map[string]interface{}{
 			"status":  "error",
@@ -32,6 +57,7 @@ func GetBooks(c *fiber.Ctx) error {
 	}
 	defer cursor.Close(context.Background())
 
+	books := []models.Book{}
 	for cursor.Next(context.Background()) {
 		var book models.Book
 		if err := cursor.Decode(&book); err != nil {
@@ -43,7 +69,21 @@ func GetBooks(c *fiber.Ctx) error {
 		books = append(books, book)
 	}
 
-	return c.JSON(books)
+	// Count total books
+	total, err := database.BookCollection.CountDocuments(context.Background(), bson.D{})
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(map[string]interface{}{
+			"status":  "error",
+			"message": "Could not count books",
+		})
+	}
+
+	return c.JSON(map[string]interface{}{
+		"books": books,
+		"total": total,
+		"page":  page,
+		"limit": limit,
+	})
 }
 
 // GetBook godoc

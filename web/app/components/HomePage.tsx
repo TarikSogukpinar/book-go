@@ -7,6 +7,8 @@ import { Toaster } from "react-hot-toast";
 import BookModal from "./elements/AddBookModal";
 import GetAllBookModal from "./elements/GetAllBookModal";
 import UpdateBookModal from "./elements/UpdateBookModal";
+import axios from "axios";
+import DeleteBookModal from "./elements/DeleteBookModal";
 
 type Props = {};
 
@@ -17,19 +19,36 @@ export default function HomePage({}: Props) {
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isGetModalOpen, setIsGetModalOpen] = useState<boolean>(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState<boolean>(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const router = useRouter();
+
+  const fetchBooks = async () => {
+    const token = Cookies.get("JWT");
+
+    if (token) {
+      try {
+        const response = await axios.get("http://localhost:6060/api/books", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setBooks(response.data.books);
+      } catch (err) {
+        setError("Kitaplar getirilemedi.");
+      }
+    } else {
+      setError("Token bulunamadı. Lütfen giriş yapın.");
+    }
+  };
 
   useEffect(() => {
     const token = Cookies.get("JWT");
 
     if (token) {
       setIsLoggedIn(true);
-      // getBooks()
-      //   .then((data) => setBooks(data))
-      //   .catch((err) => setError(err.message));
     } else {
       setIsLoggedIn(false);
-      setError("Lütfen giriş yapın");
+      setError("Lütfen giriş yapın.");
     }
   }, []);
 
@@ -49,6 +68,7 @@ export default function HomePage({}: Props) {
 
   const openGetModal = () => {
     setIsGetModalOpen(true);
+    fetchBooks(); // Kitapları butona tıklayınca getir
   };
 
   const closeGetModal = () => {
@@ -63,53 +83,67 @@ export default function HomePage({}: Props) {
     setIsUpdateModalOpen(false);
   };
 
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
+
   return (
     <div>
       <Toaster position="top-right" reverseOrder={false} />
       <div className="flex justify-between items-center p-4 bg-gray-100">
         <h1 className="text-3xl font-bold">
-          Go Lang Fiber & Next.js TypeScript Book Application
+          Go Lang Fiber & Next.js TypeScript Kitap Uygulaması
         </h1>
         {isLoggedIn && (
           <button
             onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded-md"
+            className="bg-red-500 text-white px-4 py-2 rounded-md ml-3"
           >
-            Logout
+            Çıkış Yap
           </button>
         )}
       </div>
       {isLoggedIn ? (
         <div className="mt-10">
-          <h2 className="text-2xl font-bold">Books</h2>
-          <ul>
-            {books.map((book) => (
-              <li key={book.id} className="border-b border-gray-300 py-2">
-                {book.title}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-10">
+          {books.length > 0 && (
+            <div className="flex justify-center">
+              <ul className="w-1/2">
+                {books.map((book) => (
+                  <li key={book.id} className="border-b border-gray-300 py-2">
+                    {book.title}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <div className="flex justify-center mt-10 space-x-4">
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded-md"
               onClick={openAddModal}
             >
-              Add Book
+              Kitap Ekle
             </button>
             <button
-              className="bg-green-500 text-white px-4 py-2 rounded-md ml-4"
+              className="bg-green-500 text-white px-4 py-2 rounded-md"
               onClick={openGetModal}
             >
-              Get Book
+              Kitap Getir
             </button>
             <button
-              className="bg-yellow-500 text-white px-4 py-2 rounded-md ml-4"
+              className="bg-yellow-500 text-white px-4 py-2 rounded-md"
               onClick={openUpdateModal}
             >
-              Update Book
+              Kitap Güncelle
             </button>
-            <button className="bg-red-500 text-white px-4 py-2 rounded-md ml-4">
-              Remove Book
+            <button
+              className="bg-red-500 text-white px-4 py-2 rounded-md"
+              onClick={openDeleteModal}
+            >
+              Kitap Sil
             </button>
           </div>
           <BookModal isOpen={isAddModalOpen} onClose={closeAddModal} />
@@ -117,6 +151,10 @@ export default function HomePage({}: Props) {
           <UpdateBookModal
             isOpen={isUpdateModalOpen}
             onClose={closeUpdateModal}
+          />
+          <DeleteBookModal
+            isOpen={isDeleteModalOpen}
+            onClose={closeDeleteModal}
           />
         </div>
       ) : (
@@ -126,7 +164,7 @@ export default function HomePage({}: Props) {
               href="/login"
               className="text-blue-500 hover:underline text-xl"
             >
-              Login
+              Giriş Yap
             </Link>
           </li>
           <li>
@@ -134,7 +172,7 @@ export default function HomePage({}: Props) {
               href="/register"
               className="text-blue-500 hover:underline text-xl"
             >
-              Register
+              Kayıt Ol
             </Link>
           </li>
           <li>
@@ -142,7 +180,7 @@ export default function HomePage({}: Props) {
               href="/docs"
               className="text-blue-500 hover:underline text-xl"
             >
-              Docs
+              Belgeler
             </Link>
           </li>
         </ul>
