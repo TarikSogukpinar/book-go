@@ -26,6 +26,7 @@ export default function RegisterPage({}: Props) {
           password,
         }
       );
+
       if (response.data.status === "success") {
         toast.success("Kayıt başarılı!");
         router.push("/login");
@@ -33,6 +34,7 @@ export default function RegisterPage({}: Props) {
         setError(response.data.message || "Kayıt başarısız");
         toast.error(response.data.message || "Kayıt başarısız");
       }
+      
     } catch (err) {
       setError("Kayıt başarısız");
       toast.error("Kayıt başarısız");

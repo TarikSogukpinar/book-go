@@ -5,7 +5,8 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 import BookModal from "./elements/AddBookModal";
-// import { getBooks } from "../api/books"; // Kitapları almak için API fonksiyonunu içe aktarın
+import GetAllBookModal from "./elements/GetAllBookModal";
+import UpdateBookModal from "./elements/UpdateBookModal";
 
 type Props = {};
 
@@ -13,7 +14,9 @@ export default function HomePage({}: Props) {
   const [books, setBooks] = useState<any[]>([]);
   const [error, setError] = useState<string>("");
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
+  const [isGetModalOpen, setIsGetModalOpen] = useState<boolean>(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -36,12 +39,28 @@ export default function HomePage({}: Props) {
     router.push("/login");
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  const openAddModal = () => {
+    setIsAddModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const closeAddModal = () => {
+    setIsAddModalOpen(false);
+  };
+
+  const openGetModal = () => {
+    setIsGetModalOpen(true);
+  };
+
+  const closeGetModal = () => {
+    setIsGetModalOpen(false);
+  };
+
+  const openUpdateModal = () => {
+    setIsUpdateModalOpen(true);
+  };
+
+  const closeUpdateModal = () => {
+    setIsUpdateModalOpen(false);
   };
 
   return (
@@ -73,15 +92,32 @@ export default function HomePage({}: Props) {
           <div className="mt-10">
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded-md"
-              onClick={openModal}
+              onClick={openAddModal}
             >
               Add Book
+            </button>
+            <button
+              className="bg-green-500 text-white px-4 py-2 rounded-md ml-4"
+              onClick={openGetModal}
+            >
+              Get Book
+            </button>
+            <button
+              className="bg-yellow-500 text-white px-4 py-2 rounded-md ml-4"
+              onClick={openUpdateModal}
+            >
+              Update Book
             </button>
             <button className="bg-red-500 text-white px-4 py-2 rounded-md ml-4">
               Remove Book
             </button>
           </div>
-          <BookModal isOpen={isModalOpen} onClose={closeModal} />
+          <BookModal isOpen={isAddModalOpen} onClose={closeAddModal} />
+          <GetAllBookModal isOpen={isGetModalOpen} onClose={closeGetModal} />
+          <UpdateBookModal
+            isOpen={isUpdateModalOpen}
+            onClose={closeUpdateModal}
+          />
         </div>
       ) : (
         <ul className="flex flex-col items-center space-y-4 mt-10">

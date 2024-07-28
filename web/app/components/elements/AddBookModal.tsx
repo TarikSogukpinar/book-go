@@ -17,7 +17,7 @@ export default function BookModal({ isOpen, onClose }: BookModalProps) {
   const handleAddBook = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = Cookies.get("JWT");
-    console.log(token, 'add book token')
+    console.log(token, "add book token");
     try {
       const response = await axios.post(
         "http://localhost:6060/api/books",
@@ -32,17 +32,16 @@ export default function BookModal({ isOpen, onClose }: BookModalProps) {
           },
         }
       );
-      console.log(response, 'add book response')
 
       if (response.status === 201) {
-        toast.success("Kitap başarıyla eklendi!");
+        toast.success("Book added success!");
         onClose();
       } else {
-        setError("Kitap eklenemedi");
+        setError("Book not added!");
       }
     } catch (err) {
-      setError("Kitap eklenemedi");
-      console.error("Kitap eklenirken hata:", err);
+      setError("Book not added!");
+      console.error("Error adding book:", err);
     }
   };
 
