@@ -123,12 +123,14 @@ const GetAllBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
+
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 mb-4"
               onClick={searchBooks}
             >
               Search
             </button>
+
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <p className="mb-4">Total Books: {totalBooks}</p>
             {books && books.length > 0 ? (

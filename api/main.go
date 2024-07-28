@@ -81,7 +81,7 @@ func main() {
 	app.Static("/docs", "./docs")
 
 	app.Get("/swagger/*", swagger.New(swagger.Config{
-		URL: "http://localhost:6060/docs/swagger.json", // Swagger URL
+		URL: "https://book.tariksogukpinar.dev/docs/swagger.json", // Swagger URL
 	}))
 
 	routes.SetupRoutes(app)

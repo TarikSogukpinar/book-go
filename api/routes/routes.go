@@ -26,12 +26,12 @@ func SetupRoutes(app *fiber.App) {
 	// Book routes (requires authentication)
 	books := api.Group("/books")
 	books.Use(middlewares.AuthRequired()) // Applying Auth middleware to book routes
+
+	books.Get("/search", controllers.SearchBooks)
+
 	books.Get("/", controllers.GetBooks)
 	books.Post("/", controllers.CreateBook)
 	books.Get("/:id", controllers.GetBook)
 	books.Put("/:id", controllers.UpdateBook)
 	books.Delete("/:id", controllers.DeleteBook)
-
-	// Search route
-	books.Get("/search", controllers.SearchBooks)
 }
