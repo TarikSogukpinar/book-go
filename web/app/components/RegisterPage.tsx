@@ -28,17 +28,16 @@ export default function RegisterPage({}: Props) {
       );
 
       if (response.data.status === "success") {
-        toast.success("Kayıt başarılı!");
+        toast.success("Register Successfull!");
         router.push("/login");
       } else {
-        setError(response.data.message || "Kayıt başarısız");
-        toast.error(response.data.message || "Kayıt başarısız");
+        setError(response.data.message || "Registration failed");
+        toast.error(response.data.message || "Registration failed");
       }
-      
     } catch (err) {
-      setError("Kayıt başarısız");
-      toast.error("Kayıt başarısız");
-      console.error("Kayıt olurken hata:", err);
+      setError("Registration failed");
+      toast.error("Registration failed");
+      console.error("Error while registering:", err);
     }
   };
 

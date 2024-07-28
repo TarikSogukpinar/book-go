@@ -17,10 +17,12 @@ export default function HomePage({}: Props) {
   const [books, setBooks] = useState<any[]>([]);
   const [error, setError] = useState<string>("");
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [isGetModalOpen, setIsGetModalOpen] = useState<boolean>(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -32,6 +34,7 @@ export default function HomePage({}: Props) {
       setIsLoggedIn(false);
       setError("Please log in.");
     }
+    setIsLoading(false);
   }, []);
 
   const handleLogout = () => {
@@ -94,10 +97,18 @@ export default function HomePage({}: Props) {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-950">
+        <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-950 h-12 w-12"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Toaster position="top-right" reverseOrder={false} />
-      <header className="bg-white shadow flex justify-between items-center px-4 sm:px-6 lg:px-8 py-6">
+      <header className="bg-white shadow flex justify-center items-center px-4 sm:px-6 lg:px-8 py-16">
         <div className="flex flex-col items-center">
           <div className="flex space-x-6 mb-4">
             <a
@@ -118,13 +129,13 @@ export default function HomePage({}: Props) {
             </a>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 text-center mt-4">
-            GoLang & Next.js TypeScript Book Application
+            Golang & Next.js Book Application
           </h1>
         </div>
         {isLoggedIn && (
           <button
             onClick={handleLogout}
-            className=" text-black px-4 py-2 rounded-md hover:text-gray-600"
+            className=" flex justify-end text-black  rounded-md hover:text-gray-600"
           >
             Logout
           </button>
@@ -133,7 +144,7 @@ export default function HomePage({}: Props) {
       <main>
         {isLoggedIn ? (
           <div className="mt-10">
-            <div className="flex justify-center mt-10 space-x-4">
+            <div className="flex items-center justify-between mt-10 space-x-4">
               <button
                 className="bg-gray-950 text-white px-4 py-2 rounded-md hover:bg-gray-600"
                 onClick={openAddModal}

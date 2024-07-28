@@ -36,13 +36,13 @@ const UpdateBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
         if (response.status === 200) {
           setBookDetails(response.data);
         } else {
-          setError("Kitap detayları getirilemedi.");
+          setError("Book details could not be provided.");
         }
       } catch (err) {
-        setError("Kitap detayları getirilemedi veya bir hata oluştu.");
+        setError("Book details could not be fetched or an error occurred.");
       }
     } else {
-      setError("Token bulunamadı. Lütfen giriş yapın.");
+      setError("Please log in.");
     }
   };
 
@@ -71,45 +71,57 @@ const UpdateBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
         if (response.status === 200) {
           onClose();
         } else {
-          setError("Kitap detayları güncellenemedi.");
+          setError("Book details could not be updated.");
         }
       } catch (err) {
-        setError("Kitap detayları güncellenemedi veya bir hata oluştu.");
+        setError("Book details could not be updated or an error occurred.");
       }
     } else {
-      setError("Token bulunamadı. Lütfen giriş yapın.");
+      setError("Please log in.");
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-4 rounded-md w-3/4 max-h-3/4 overflow-y-auto">
-        <h2 className="text-xl font-bold">Kitap Güncelle</h2>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white p-6 rounded-lg w-11/12 max-w-3xl mx-auto">
+        <h2 className="text-2xl font-bold mb-4">Update Book</h2>
         {!bookDetails ? (
-          <form onSubmit={handleFetchBookDetails} className="flex flex-col">
-            <label htmlFor="bookId" className="mt-2">
-              Kitap ID:
+          <form
+            onSubmit={handleFetchBookDetails}
+            className="flex flex-col space-y-4"
+          >
+            <label
+              htmlFor="bookId"
+              className="block text-sm font-bold text-gray-700"
+            >
+              Book ID:
             </label>
             <input
               type="text"
               id="bookId"
               value={bookId}
               onChange={(e) => setBookId(e.target.value)}
-              className="p-2 border rounded-md mt-2"
+              className="p-2 border rounded-md"
             />
             <button
               type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4"
+              className="bg-gray-950 text-white px-4 py-2 rounded-md hover:bg-gray-600"
             >
-              Kitap Detaylarını Getir
+              Get Book Details
             </button>
           </form>
         ) : (
-          <form onSubmit={handleUpdateBookDetails} className="flex flex-col">
-            <label htmlFor="title" className="mt-2">
-              Başlık:
+          <form
+            onSubmit={handleUpdateBookDetails}
+            className="flex flex-col space-y-4"
+          >
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Title:
             </label>
             <input
               type="text"
@@ -120,10 +132,13 @@ const UpdateBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   prev ? { ...prev, title: e.target.value } : prev
                 )
               }
-              className="p-2 border rounded-md mt-2"
+              className="p-2 border rounded-md"
             />
-            <label htmlFor="author" className="mt-2">
-              Yazar:
+            <label
+              htmlFor="author"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Writer:
             </label>
             <input
               type="text"
@@ -134,10 +149,13 @@ const UpdateBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   prev ? { ...prev, author: e.target.value } : prev
                 )
               }
-              className="p-2 border rounded-md mt-2"
+              className="p-2 border rounded-md"
             />
-            <label htmlFor="description" className="mt-2">
-              Açıklama:
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Description:
             </label>
             <textarea
               id="description"
@@ -147,23 +165,26 @@ const UpdateBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   prev ? { ...prev, description: e.target.value } : prev
                 )
               }
-              className="p-2 border rounded-md mt-2"
+              className="p-2 border rounded-md"
             />
             <button
               type="submit"
-              className="bg-green-500 text-white px-4 py-2 rounded-md mt-4"
+              className="bg-gray-950 text-white px-4 py-2 rounded-md hover:bg-gray-600"
             >
-              Kitap Güncelle
+              Update Book
             </button>
           </form>
         )}
         {error && <p className="text-red-500 mt-4">{error}</p>}
-        <button
-          className="bg-red-500 text-white px-4 py-2 rounded-md mt-4"
-          onClick={onClose}
-        >
-          Kapat
-        </button>
+        <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button
+            type="button"
+            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+            onClick={onClose}
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );

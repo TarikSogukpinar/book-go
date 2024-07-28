@@ -8,6 +8,7 @@ import (
 	"book-go/config"
 	"book-go/database"
 	_ "book-go/docs" // Swagger dosyalarını import edin
+	"book-go/middlewares"
 	"book-go/routes"
 
 	"github.com/gofiber/fiber/v2"
@@ -67,6 +68,8 @@ func main() {
 		TimeFormat: "02-Jan-2006",
 		TimeZone:   "Local",
 	}))
+
+	app.Use(middlewares.URLCleanupMiddleware())
 
 	app.Static("/docs", "./docs")
 

@@ -26,7 +26,6 @@ export default function LoginPage({}: Props) {
       );
 
       if (response.data.status === "success") {
-        // Assuming the JWT token is returned in response.data.token
         document.cookie = `JWT=${response.data.token}; path=/; secure; samesite=strict;`;
         router.push("/");
       } else {

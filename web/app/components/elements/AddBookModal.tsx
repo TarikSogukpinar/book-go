@@ -17,7 +17,6 @@ export default function BookModal({ isOpen, onClose }: BookModalProps) {
   const handleAddBook = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = Cookies.get("JWT");
-    console.log(token, "add book token");
     try {
       const response = await axios.post(
         "https://book.tariksogukpinar.dev/api/books",
@@ -134,7 +133,7 @@ export default function BookModal({ isOpen, onClose }: BookModalProps) {
                     <div className="mt-5 sm:mt-6">
                       <button
                         type="submit"
-                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm"
+                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-950 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm"
                       >
                         Add Book
                       </button>
@@ -150,7 +149,7 @@ export default function BookModal({ isOpen, onClose }: BookModalProps) {
               className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
               onClick={onClose}
             >
-              Cancel
+              Close
             </button>
           </div>
         </div>

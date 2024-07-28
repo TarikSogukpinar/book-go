@@ -19,7 +19,7 @@ const GetAllBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalBooks, setTotalBooks] = useState<number>(0);
-  const [booksPerPage] = useState<number>(5); // You can change the number of books per page
+  const [booksPerPage] = useState<number>(5); // Change this value to change the number of books per page
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -73,42 +73,41 @@ const GetAllBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-4 rounded-md w-3/4 max-h-3/4 overflow-y-auto">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white p-6 rounded-lg w-11/12 max-w-3xl mx-auto">
         {loading ? (
           <Spinner />
         ) : (
           <>
-            <h2 className="text-xl font-bold">All Books</h2>
-            {error && <p className="text-red-500 mt-4">{error}</p>}
-            <p className="mt-4">Total Books: {totalBooks}</p>
+            <h2 className="text-2xl font-bold mb-4">All Books</h2>
+            {error && <p className="text-red-500 mb-4">{error}</p>}
+            <p className="mb-4">Total Books: {totalBooks}</p>
             {books && books.length > 0 ? (
-              <ul className="mt-4">
+              <ul className="space-y-2">
                 {books.map((book) => (
                   <li key={book.id} className="border-b border-gray-300 py-2">
-                    <p>ID: {book.id}</p>
-                    <p>Title: {book.title}</p>
-                    <p>Author: {book.author}</p>
-                    {/* Display other book details as needed */}
+                    <p className="font-semibold">ID: {book.id}</p>
+                    <p className="font-semibold">Title: {book.title}</p>
+                    <p className="font-semibold">Author: {book.author}</p>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="mt-4">No books found.</p>
+              <p className="text-gray-600">No books found.</p>
             )}
             <div className="flex justify-between items-center mt-4">
               <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
               >
                 Previous
               </button>
-              <span>
+              <span className="font-medium">
                 Page {currentPage} of {totalPages}
               </span>
               <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
                 onClick={() =>
                   setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                 }
@@ -117,12 +116,15 @@ const GetAllBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 Next
               </button>
             </div>
-            <button
-              className="bg-red-500 text-white px-4 py-2 rounded-md mt-4"
-              onClick={onClose}
-            >
-              Close
-            </button>
+            <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+              <button
+                type="button"
+                className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                onClick={onClose}
+              >
+                Close
+              </button>
+            </div>
           </>
         )}
       </div>
