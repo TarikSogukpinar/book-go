@@ -83,7 +83,6 @@ func Register(c *fiber.Ctx) error {
 // @Tags auth
 // @Accept json
 // @Produce json
-// @Param user body models.LoginRequest true "LoginRequest"
 // @Success 200 {object} map[string]interface{}
 // @Failure 400 {object} map[string]interface{}
 // @Failure 401 {object} map[string]interface{}

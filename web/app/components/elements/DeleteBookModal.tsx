@@ -61,7 +61,7 @@ export default function DeleteBookModal({
             value={bookId}
             onChange={(e) => setBookId(e.target.value)}
             required
-            className="p-2 border rounded-md"
+            className="p-2 border rounded-md border-gray-950"
           />
           <button
             type="submit"

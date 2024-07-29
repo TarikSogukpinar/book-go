@@ -21,6 +21,7 @@ const GetAllBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [totalBooks, setTotalBooks] = useState<number>(0);
   const [booksPerPage] = useState<number>(5); // Change this value to change the number of books per page
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [editBook, setEditBook] = useState<any>(null);
 
   const fetchBooks = async () => {
     setError("");
@@ -98,6 +99,64 @@ const GetAllBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
     }
   };
 
+  const handleEdit = (book: any) => {
+    setEditBook(book);
+  };
+
+  const handleDelete = async (id: number) => {
+    setLoading(true);
+    const token = Cookies.get("JWT");
+
+    if (token) {
+      try {
+        await axios.delete(`https://book.tariksogukpinar.dev/api/books/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
+      } catch (err) {
+        setError("Failed to delete the book or an error occurred");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setError("Token not found. Please login.");
+      setLoading(false);
+    }
+  };
+
+  const handleEditSave = async () => {
+    if (!editBook) return;
+    setLoading(true);
+    const token = Cookies.get("JWT");
+
+    if (token) {
+      try {
+        await axios.put(
+          `https://book.tariksogukpinar.dev/api/books/${editBook.id}`,
+          editBook,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setBooks((prevBooks) =>
+          prevBooks.map((book) => (book.id === editBook.id ? editBook : book))
+        );
+        setEditBook(null);
+      } catch (err) {
+        setError("Failed to update the book or an error occurred");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setError("Token not found. Please login.");
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (isOpen) {
       fetchBooks();
@@ -115,31 +174,51 @@ const GetAllBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
           <Spinner />
         ) : (
           <>
-            <h2 className="text-2xl font-bold mb-4">All Books</h2>
+            <h2 className="text-2xl font-bold mb-4">Search Books</h2>
             <input
               type="text"
-              placeholder="Search by title..."
-              className="p-2 border rounded-md w-full mb-4"
+              placeholder="Search by book database..."
+              className="p-2 border rounded-md w-full mb-4 border-gray-950"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
 
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 mb-4"
+              className="bg-gray-950 text-white px-4 py-2 rounded-md hover:bg-gray-600 mb-2"
               onClick={searchBooks}
             >
               Search
             </button>
 
             {error && <p className="text-red-500 mb-4">{error}</p>}
+            <h2 className="text-2xl font-bold mb-4">All Books</h2>
             <p className="mb-4">Total Books: {totalBooks}</p>
             {books && books.length > 0 ? (
               <ul className="space-y-2">
                 {books.map((book) => (
-                  <li key={book.id} className="border-b border-gray-300 py-2">
-                    <p className="font-semibold">Book ID: {book.id}</p>
-                    <p className="font-semibold">Title: {book.title}</p>
-                    <p className="font-semibold">Author: {book.author}</p>
+                  <li
+                    key={book.id}
+                    className="border-b border-gray-300 py-2 flex justify-between items-center"
+                  >
+                    <div>
+                      <p className="font-semibold">Book ID: {book.id}</p>
+                      <p className="font-semibold">Title: {book.title}</p>
+                      <p className="font-semibold">Author: {book.author}</p>
+                    </div>
+                    <div className="flex space-x-2">
+                      <button
+                        className="bg-gray-950 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+                        onClick={() => handleEdit(book)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700"
+                        onClick={() => handleDelete(book.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -179,6 +258,45 @@ const GetAllBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
           </>
         )}
       </div>
+      {editBook && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg w-11/12 max-w-3xl mx-auto">
+            <h2 className="text-2xl font-bold mb-4">Edit Book</h2>
+            <input
+              type="text"
+              placeholder="Title"
+              className="p-2 border rounded-md w-full mb-4 border-gray-950"
+              value={editBook.title}
+              onChange={(e) =>
+                setEditBook({ ...editBook, title: e.target.value })
+              }
+            />
+            <input
+              type="text"
+              placeholder="Author"
+              className="p-2 border rounded-md w-full mb-4 border-gray-950"
+              value={editBook.author}
+              onChange={(e) =>
+                setEditBook({ ...editBook, author: e.target.value })
+              }
+            />
+            <div className="flex justify-end space-x-2">
+              <button
+                className="bg-gray-950 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+                onClick={handleEditSave}
+              >
+                Save
+              </button>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700"
+                onClick={() => setEditBook(null)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

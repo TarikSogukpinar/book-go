@@ -103,7 +103,7 @@ const UpdateBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
               id="bookId"
               value={bookId}
               onChange={(e) => setBookId(e.target.value)}
-              className="p-2 border rounded-md"
+              className="p-2 border rounded-md border-gray-950"
             />
             <button
               type="submit"

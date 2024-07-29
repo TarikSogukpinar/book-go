@@ -37,17 +37,6 @@ const docTemplate = `{
                     "auth"
                 ],
                 "summary": "Log in a user",
-                "parameters": [
-                    {
-                        "description": "User",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.User"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -131,7 +120,7 @@ const docTemplate = `{
         },
         "/api/books": {
             "get": {
-                "description": "Retrieve all books",
+                "description": "Retrieve all books with pagination",
                 "produces": [
                     "application/json"
                 ],
@@ -139,14 +128,26 @@ const docTemplate = `{
                     "books"
                 ],
                 "summary": "Get all books",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of books per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Book"
-                            }
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     },
                     "500": {
@@ -190,6 +191,43 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/api/books/search": {
+            "get": {
+                "description": "Search books by title",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "books"
+                ],
+                "summary": "Search books",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search query",
+                        "name": "q",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -375,10 +413,14 @@ const docTemplate = `{
         "models.User": {
             "type": "object",
             "required": [
+                "email",
                 "password",
                 "username"
             ],
             "properties": {
+                "email": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },

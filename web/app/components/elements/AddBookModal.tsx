@@ -89,7 +89,7 @@ export default function BookModal({ isOpen, onClose }: BookModalProps) {
                           value={title}
                           onChange={(e) => setTitle(e.target.value)}
                           required
-                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                          className={`block w-full px-3 py-2 border border-gray-950 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
                         />
                       </div>
                     </div>
@@ -108,7 +108,7 @@ export default function BookModal({ isOpen, onClose }: BookModalProps) {
                           value={author}
                           onChange={(e) => setAuthor(e.target.value)}
                           required
-                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                          className={`block w-full px-3 py-2 border border-gray-950 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
                         />
                       </div>
                     </div>
@@ -126,7 +126,7 @@ export default function BookModal({ isOpen, onClose }: BookModalProps) {
                           value={description}
                           onChange={(e) => setDescription(e.target.value)}
                           required
-                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                          className={`block w-full px-3 py-2 border border-gray-950 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
                         ></textarea>
                       </div>
                     </div>
