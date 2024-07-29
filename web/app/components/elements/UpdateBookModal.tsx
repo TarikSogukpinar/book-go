@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { Toaster, toast } from "react-hot-toast";
 
 type Props = {
   isOpen: boolean;
@@ -37,12 +38,15 @@ const UpdateBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
           setBookDetails(response.data);
         } else {
           setError("Book details could not be provided.");
+          toast.error("Book details could not be provided.");
         }
       } catch (err) {
         setError("Book details could not be fetched or an error occurred.");
+        toast.error("Book details could not be fetched or an error occurred.");
       }
     } else {
       setError("Please log in.");
+      toast.error("Please log in.");
     }
   };
 
@@ -70,14 +74,18 @@ const UpdateBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
         if (response.status === 200) {
           onClose();
+          toast.success("Book details updated successfully.");
         } else {
           setError("Book details could not be updated.");
+          toast.error("Book details could not be updated.");
         }
       } catch (err) {
         setError("Book details could not be updated or an error occurred.");
+        toast.error("Book details could not be updated or an error occurred.");
       }
     } else {
       setError("Please log in.");
+      toast.error("Please log in.");
     }
   };
 
@@ -85,6 +93,7 @@ const UpdateBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="bg-white p-6 rounded-lg w-11/12 max-w-3xl mx-auto">
         <h2 className="text-2xl font-bold mb-4">Update Book</h2>
         {!bookDetails ? (

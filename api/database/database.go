@@ -4,6 +4,7 @@ import (
 	"book-go/config"
 	"context"
 	"fmt"
+	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -26,7 +27,7 @@ func Connect() error {
 	mongoURI := config.Get("MONGODB_URI")
 	dbName := config.Get("DB_NAME")
 
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(mongoURI))
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(mongoURI).SetMaxPoolSize(50).SetConnectTimeout(10*time.Second))
 
 	if err != nil {
 		return err

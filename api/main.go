@@ -72,7 +72,7 @@ func main() {
 	app := fiber.New()
 
 	app.Use(limiter.New(limiter.Config{
-		Max:        10,
+		Max:        100,
 		Expiration: 30 * time.Second,
 	}))
 
@@ -96,7 +96,7 @@ func main() {
 	app.Static("/docs", "./docs")
 
 	app.Get("/swagger/*", swagger.New(swagger.Config{
-		URL: "https://book.tariksogukpinar.dev/docs/swagger.json", // Swagger URL
+		URL: "http://localhost:6060/docs/swagger.json", // Swagger URL
 	}))
 
 	routes.SetupRoutes(app)

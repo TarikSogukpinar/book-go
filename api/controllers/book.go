@@ -254,14 +254,15 @@ func DeleteBook(c *fiber.Ctx) error {
 // @Produce json
 // @Param q query string true "Search query"
 // @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
 // @Failure 500 {object} map[string]interface{}
 // @Router /api/books/search [get]
 func SearchBooks(c *fiber.Ctx) error {
 	query := c.Query("q")
-	if query == "" {
+	if len(query) < 2 {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"status":  "error",
-			"message": "Query parameter is required",
+			"message": "Query parameter must be at least 2 characters long",
 		})
 	}
 
