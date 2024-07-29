@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"log"
 	"os"
 	"time"
@@ -11,6 +12,7 @@ import (
 	_ "book-go/docs"
 	"book-go/middlewares"
 	"book-go/routes"
+	"book-go/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -37,6 +39,9 @@ import (
 
 func main() {
 
+	seed := flag.Bool("seed", false, "seed the database with fake data")
+	flag.Parse()
+
 	config.LoadConfig()
 
 	if err := database.Connect(); err != nil {
@@ -47,6 +52,16 @@ func main() {
 			panic(err)
 		}
 	}()
+
+	// If the seed flag is set, seed the database and exit
+	if *seed {
+		err := utils.SeedBooks(500)
+		if err != nil {
+			log.Fatalf("Sahte kitaplar eklenirken hata oluştu: %v", err)
+		}
+		log.Println("Sahte kitaplar başarıyla eklendi!")
+		return
+	}
 
 	logFile, err := os.OpenFile("server.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {

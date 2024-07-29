@@ -19,7 +19,7 @@ const GetAllBookModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalBooks, setTotalBooks] = useState<number>(0);
-  const [booksPerPage] = useState<number>(5); // Change this value to change the number of books per page
+  const [booksPerPage] = useState<number>(2); // Change this value to change the number of books per page
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [editBook, setEditBook] = useState<any>(null);
 

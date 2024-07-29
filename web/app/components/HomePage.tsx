@@ -112,8 +112,8 @@ export default function HomePage({}: Props) {
     <div className="min-h-screen bg-gray-100">
       <Toaster position="top-right" reverseOrder={false} />
       <header className="bg-white shadow flex flex-col md:flex-row justify-between items-center px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex flex-col items-center md:items-start">
-          <h1 className="text-4xl font-bold text-gray-900 text-center md:text-left mt-4 md:mt-0">
+        <div className="flex flex-col items-center justify-center md:items-start">
+          <h1 className="text-4xl font-bold text-gray-900 text-center md:text-left mt-4 md:mt-0 mb-16">
             Golang & Next.js Book Application
           </h1>
         </div>
