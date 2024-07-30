@@ -153,11 +153,11 @@ run projects
 
   
 ## Links
-https://book.tariksogukpinar.dev/
-https://github.com/TarikSogukpinar/book-go
-https://github.com/TarikSogukpinar/book-go/tree/main/api
-https://github.com/TarikSogukpinar/book-go/tree/main/web
-https://hub.docker.com/repository/docker/ledun/book-go-web/general
-https://hub.docker.com/repository/docker/ledun/book-go-api/general
+- https://book.tariksogukpinar.dev/
+- https://github.com/TarikSogukpinar/book-go
+- https://github.com/TarikSogukpinar/book-go/tree/main/api
+- https://github.com/TarikSogukpinar/book-go/tree/main/web
+- https://hub.docker.com/repository/docker/ledun/book-go-web/-general
+ - https://hub.docker.com/repository/docker/ledun/book-go-api/general
 
   
