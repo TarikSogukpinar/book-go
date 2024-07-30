@@ -142,14 +142,18 @@ run projects
 ```
 
   
-
-  
-# Enviroment variables
+# Api Enviroment variables
 
 - MONGODB_URI= example-url
 - DB_NAME= example-go
 - PORT=6060
 - JWT_SECRET=supersecretkey
+
+# Web Enviroment variables
+
+- NEXT_PUBLIC_API_URL= https://book.tariksogukpinar.dev/api
+- NEXT_PUBLIC_API_PORT = 7010
+- NEXT_PUBLIC_API_JWT_SECRET=supersecretkey
 
   
 ## Links
