@@ -99,15 +99,14 @@
   
 **Client:** Next.js, Tailwind CSS, Typescript
 
-**Server:** Fiber, GoLang, Docker
+**Server:** Fiber, GoLang, Docker, Ubuntu
 
 **Database:** Mongo DB
 
-**Packages:** Jsonwebtoken, Helmet, godotenv, cors, swagger, mongo-driver, jose, faker, air
+**Packages:** jwt-go, Helmet, godotenv, cors, swagger, mongo-driver, jose, faker, air, js-cookie, axios
 
   
 # Demo
-
 https://book.tariksogukpinar.dev/
 
   
@@ -143,17 +142,9 @@ run projects
   
 # Enviroment variables
 
-- NODE_ENV=development or production or staging
-- DATABASE_URL= your_database_url
-- API_PORT = 5000
-- JWT_SECRET = secret
-- JWT_EXPIRES_IN = 1d
-- JWT_REFRESH_SECRET = secret
-- JWT_REFRESH_EXPIRES_IN = 7d
-- GOOGLE_CLIENT_ID= your_google_client_id
-- GOOGLE_CLIENT_SECRET= your_google_secret_client_id
-- GITHUB_CLIENT_ID= your_github_client_id
-- GITHUB_CLIENT_SECRET= your_github_client_secret
-- API_GLOBAL_PREFIX = /api
+- MONGODB_URI= example-url
+- DB_NAME= example-go
+- PORT=6060
+- JWT_SECRET=supersecretkey
 
   
