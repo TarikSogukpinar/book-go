@@ -57,9 +57,9 @@ func main() {
 	if *seed {
 		err := utils.SeedBooks(500)
 		if err != nil {
-			log.Fatalf("Sahte kitaplar eklenirken hata oluştu: %v", err)
+			log.Fatalf("Error adding fake books: %v", err)
 		}
-		log.Println("Sahte kitaplar başarıyla eklendi!")
+		log.Println("Fake books added successfully!")
 		return
 	}
 
