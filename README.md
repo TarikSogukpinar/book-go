@@ -53,7 +53,9 @@
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `book`      | `object` | **Required**. Book details |
+| `title`      | `string` | **Required**. Book title |
+| `Author`      | `string` | **Required**. Book Author |
+| `Description`      | `string` | **Required**. Book Description |
 
 
 
@@ -107,7 +109,9 @@
 
   
 # Demo
-https://book.tariksogukpinar.dev/
+- https://book.tariksogukpinar.dev ( Live )
+- http://localhost:6060 (Local Development API)
+- http://localhost:7070 (Local Development Web)
 
   
 # Installation
@@ -148,8 +152,12 @@ run projects
 - JWT_SECRET=supersecretkey
 
   
-## Ekran Görüntüleri
-
-![Uygulama Ekran Görüntüsü](https://i.ibb.co/n3yTQvm/Ekran-g-r-nt-s-2024-07-30-085603.png)
+## Links
+https://book.tariksogukpinar.dev/
+https://github.com/TarikSogukpinar/book-go
+https://github.com/TarikSogukpinar/book-go/tree/main/api
+https://github.com/TarikSogukpinar/book-go/tree/main/web
+https://hub.docker.com/repository/docker/ledun/book-go-web/general
+https://hub.docker.com/repository/docker/ledun/book-go-api/general
 
   
