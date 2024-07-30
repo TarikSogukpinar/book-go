@@ -7,30 +7,95 @@
 
 ## API Usage
 
-#### List All Books
+- Auth API
 
-```http
-  GET /api/items
+#### Login
+
+```https
+  __POST__ /api/auth/login
 ```
 
-| Parametre | Tip     | Açıklama                |
-| :-------- | :------- | :------------------------- |
-| `api_key` | `string` | **Gerekli**. API anahtarınız. |
-
-#### Öğeyi getir
-
-```http
-  GET /api/items/${id}
-```
-
-| Parametre | Tip     | Açıklama                       |
+| Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Gerekli**. Çağrılacak öğenin anahtar değeri |
+| `email`      | `string` | **Required**. The email of the user |
+| `password`      | `string` | **Required**. The password of the user |
 
-#### add(num1, num2)
+#### Register
 
-İki sayı alır ve toplamı döndürür.
+```https
+  __POST__ /api/auth/register
+```
 
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `username`      | `string` | **Required**. The username of the user |
+| `email`      | `string` | **Required**. The email of the user |
+| `password`      | `string` | **Required**. The password of the user |
+
+
+- Books API
+
+
+```https
+  __GET__ /api/books
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `page`      | `integer` | **Required**. Page number |
+
+
+
+
+```https
+  __POST__  /api/books
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `book`      | `object` | **Required**. Book details |
+
+
+
+
+```https
+  __GET__ /api/books/search
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `q`      | `string` | **Required**. Search query |
+
+
+```https
+  __GET__ /api/books/{id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Book ID |
+| `book`      | `object` | **Required**. Book details |
+
+
+```https
+  __DELETE__ /api/books/{id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Book ID |
+
+
+
+
+
+
+
+
+
+
+
+##
   
 **Client:** Next.js, Tailwind CSS, Typescript
 
