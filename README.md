@@ -148,3 +148,8 @@ run projects
 - JWT_SECRET=supersecretkey
 
   
+## Ekran Görüntüleri
+
+![Uygulama Ekran Görüntüsü](https://i.ibb.co/n3yTQvm/Ekran-g-r-nt-s-2024-07-30-085603.png)
+
+  
