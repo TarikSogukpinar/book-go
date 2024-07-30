@@ -163,5 +163,6 @@ run projects
 - https://github.com/TarikSogukpinar/book-go/tree/main/web
 - https://hub.docker.com/repository/docker/ledun/book-go-web/general
 - https://hub.docker.com/repository/docker/ledun/book-go-api/general
+- http://localhost:6060/swagger/index.html
 
   
